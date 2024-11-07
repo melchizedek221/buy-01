@@ -7,5 +7,4 @@ import com.secke.media_service.Model.Media;
 
 public interface MediaRepository extends MongoRepository<Media, String> {
     //ToDO: jsp
-
 }
