@@ -3,6 +3,7 @@ package com.secke.media_service.Controller;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,18 +12,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Map;
-
 import javax.imageio.ImageIO;
 
 import com.secke.media_service.Model.Media;
 import com.secke.media_service.Repository.MediaRepository;
 import com.secke.media_service.Service.MediaService;
 
-
 @RestController
 @RequestMapping("/media")
 public class MediaController {
+
     @Autowired
     private MediaService mediaService;
 
@@ -37,7 +36,7 @@ public class MediaController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "File size exceeds the 2MB limit");
         }
 
-        // Validate file typee if not img
+        // Validate file type if not an image
         try {
             String contentType = file.getContentType();
             if (contentType == null || !contentType.startsWith("image/")) {
@@ -55,7 +54,7 @@ public class MediaController {
         try {
             Media media = mediaService.uploadImage(file, productId);
 
-            // successsss
+            // Success
             Map<String, String> response = new HashMap<>();
             response.put("message", "Upload successful");
             response.put("mediaId", media.getId());
@@ -66,10 +65,34 @@ public class MediaController {
                 .body("Error: " + e.getMessage());
         }
     }
-
-    @GetMapping("/all")
+    
+    @GetMapping
     public List<Media> getAllMedia() {
         return mediaRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Media> getMedia(@PathVariable String id) {
+        Media media = mediaRepository.findByProductId(id).orElse(null);
+        if (media == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.ok(media);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteMedia(@PathVariable String id) {
+        Media media = mediaRepository.findByProductId(id).orElse(null);
+        if (media == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        mediaRepository.delete(media);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteAllMedia() {
+        mediaRepository.deleteAll();
+        return ResponseEntity.ok().build();
+    }
 }
