@@ -1,6 +1,7 @@
 package com.secke.user_service.Controller;
 
 
+import com.secke.user_service.Model.Product;
 import com.secke.user_service.Model.User;
 import com.secke.user_service.Model.UserCustomize;
 import com.secke.user_service.Model.UserPrincipal;
@@ -92,5 +93,13 @@ public class UserController {
             return ResponseEntity.ok(userCustomize);
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }
+
+    // The user externals resources
+
+    @GetMapping("get/{userId}")
+    public ResponseEntity<List<Product>> getUserProducts(@PathVariable String userId) {
+        List<Product> myProducts = userServ.getUserProducts(userId);
+        return ResponseEntity.ok(myProducts);
     }
 }

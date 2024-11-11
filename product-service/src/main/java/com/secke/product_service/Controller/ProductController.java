@@ -38,25 +38,6 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @PreAuthorize("hasAuthority('SELLER') and authentication.principal.getId() == @productService.getProductById(#id)?.userId")
-    @GetMapping("/{id}")
-    public ResponseEntity<Product> getProductById(@PathVariable String id) {
-        if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getProductById(id));
-        }
-        return  ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }
-
-    @PreAuthorize("hasAuthority('SELLER') and authentication.principal.getId() == #userId")
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Product>> getProductByUserId(@PathVariable String userId) {
-        if (bucket.tryConsume(1)) {
-            return ResponseEntity.ok(productService.getUserProducts(userId));
-        }
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
-    }
-
-
     @PostMapping
     public ResponseEntity<Product> createProduct(@Valid @RequestParam String userId, @RequestBody Product productDetail) {
         if (bucket.tryConsume(1)) {
@@ -74,7 +55,6 @@ public class ProductController {
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
-
     @PreAuthorize("hasAuthority('SELLER') and authentication.principal.getId() == @productService.getProductById(#id)?.userId")
     @PutMapping("/{id}")
     public ResponseEntity<Product> updateProduct(@PathVariable String id, @Valid @RequestBody Product productDetail) {
@@ -89,4 +69,29 @@ public class ProductController {
     public void deleteProduct(@PathVariable String id) {
         productService.deleteProduct(id);
     }
+
+    @PreAuthorize("hasAuthority('SELLER') and authentication.principal.getId() == @productService.getProductById(#id)?.userId")
+    @GetMapping("/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable String id) {
+        if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(productService.getProductById(id));
+        }
+        return  ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }
+
+    // This method allow a specific user to retrieve his created products
+//    @PreAuthorize("hasAuthority('SELLER') and authentication.principal.getId() == #userId")
+    @PreAuthorize("hasAuthority('SELLER')")
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Product>> getProductByUserId(@PathVariable String userId) {
+        if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(productService.getUserProducts(userId));
+        }
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }
+
+
+
+
+
 }

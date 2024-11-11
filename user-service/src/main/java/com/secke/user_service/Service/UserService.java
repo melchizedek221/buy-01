@@ -2,6 +2,8 @@ package com.secke.user_service.Service;
 
 
 import com.secke.user_service.Error.ResourceNotFoundException;
+import com.secke.user_service.Feign.UserInterface;
+import com.secke.user_service.Model.Product;
 import com.secke.user_service.Model.User;
 import com.secke.user_service.Model.UserCustomize;
 import com.secke.user_service.Repository.UserRepository;
@@ -15,6 +17,9 @@ import java.util.List;
 public class UserService {
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    UserInterface userInterface;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 //    @Autowired
@@ -64,6 +69,10 @@ public class UserService {
 //        try {
 //
 //        }
+    }
+
+    public List<Product> getUserProducts(String userId) {
+        return userInterface.getProductByUserId(userId).getBody();
     }
 
 //    private boolean validUser(User user) {
