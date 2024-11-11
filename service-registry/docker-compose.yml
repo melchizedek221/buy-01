@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  spring-app:
+    build: .
+    ports:
+      - "8761:8761"
+    container_name: eureka-server
+    networks:
+      - microservices-network
+networks:
+  microservices-network:
+    external: true

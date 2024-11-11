@@ -10,18 +10,15 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 @Configuration
 public class MongoConfig {
 
-    @Value("${spring.data.mongodb.host}")
-    private String host;
-
-    @Value("${spring.data.mongodb.port}")
-    private int port;
+    @Value("${spring.data.mongodb.uri}")
+    private String mongoUri;
 
     @Value("${spring.data.mongodb.database}")
     private String database;
 
     @Bean
     public MongoClient mongoClient() {
-        return MongoClients.create(String.format("mongodb://%s:%d", host, port));
+        return MongoClients.create(mongoUri);
     }
 
     @Bean

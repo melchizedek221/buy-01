@@ -68,7 +68,7 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN') or authentication.principal.getId() == #id")
+    @PreAuthorize("authentication.principal.getId() == #id")
     @PutMapping("/{id}")
     public ResponseEntity<UserCustomize> updateUser(@PathVariable String id, @Valid @RequestBody User userDetails) {
         if (bucket.tryConsume(1)) {
@@ -78,7 +78,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN') or authentication.principal.getId() == #id")
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable String id) {
         userServ.deleteUser(id);
