@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient("PRODUCT-SERVICE/product-service")
+@FeignClient(name = "PRODUCT-SERVICE")
 public interface UserInterface {
     @PreAuthorize("hasAuthority('SELLER')")
     @GetMapping("api/products/user/{userId}")
