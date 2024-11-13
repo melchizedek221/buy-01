@@ -97,9 +97,9 @@ public class UserController {
 
     // The user externals resources
 
-    @GetMapping("get/{userId}")
-    public ResponseEntity<List<Product>> getUserProducts(@PathVariable String userId) {
-        List<Product> myProducts = userServ.getUserProducts(userId);
-        return ResponseEntity.ok(myProducts);
-    }
+    // @GetMapping("get/{userId}")
+    // public ResponseEntity<List<Product>> getUserProducts(@PathVariable String userId) {
+    //     List<Product> myProducts = userServ.getUserProducts(userId);
+    //     return ResponseEntity.ok(myProducts);
+    // }
 }
