@@ -12,7 +12,7 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private static final String SECRET_KEY = "iNakY36pTMhFGgQhbzNBfX/IRPWMQ0z9EAIryh5CCDMm";
-    private static final long TOKEN_VALIDITY = 24 * 60 * 60 * 1000; // 24 hours
+    private static final long TOKEN_VALIDITY = 24 * 365 * 60 * 60 * 1000; // 24 hours
 
     public String generateToken(UserDetails userDetails) {
         return Jwts.builder()

@@ -7,6 +7,8 @@ import com.secke.user_service.Model.Product;
 import com.secke.user_service.Model.User;
 import com.secke.user_service.Model.UserCustomize;
 import com.secke.user_service.Repository.UserRepository;
+import com.secke.user_service.kafka.Producer;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,9 @@ public class UserService {
 
     @Autowired
     UserInterface userInterface;
+
+    @Autowired
+    Producer producer;
 
     private BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(12);
 //    @Autowired
@@ -37,7 +42,8 @@ public class UserService {
         if (user.getPassword() != null) {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
-      return  userRepo.save(user);
+        producer.sendUserRegistrationEvent(user);
+        return  userRepo.save(user);
     }
 
     public User getUserById(String id) {
